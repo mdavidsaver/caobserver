@@ -17,7 +17,6 @@ _log = logging.getLogger(__name__)
 import socket
 
 from pymongo.connection import Connection
-from bson import Code
 
 from twisted.internet import threads
 

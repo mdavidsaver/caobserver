@@ -11,7 +11,7 @@ the Free Software Foundation, either version 3 of the License, or
 See LICENSE for details.
 """
 
-import collections, time, socket
+import collections, time
 
 class Cache(object):
     """Associative collection bounded in time and size.
@@ -124,19 +124,6 @@ class Cache(object):
             # too large
             K, _ = self._values.popitem(last=False)
             del self._times[K]
-
-class DNSCache(object):
-    def __init__(self, *args, **kws):
-        self._C = Cache(*args, **kws)
-    def lookup(self, addr, now=None):
-        name = self._C.get(addr, now=now)
-        if name is None:
-            try:
-                name, _alias, _addrs = socket.gethostbyaddr(addr)
-                self._C.set(addr, name, now=now)
-            except (socket.error, socket.gaierror):
-                name = addr
-        return name
 
 if __name__=='__main__':
     import doctest
