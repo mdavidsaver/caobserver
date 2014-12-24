@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %} - Host {{host}}{% endblock %}
+{% block banner %} - Host {{host}}{% endblock %}
+
+{% block extrahead %}
+<meta http-equiv="refresh" content="30">
+{% endblock %}
+
+{% block main %}
+<ul>
+<li>{{servports|length}} servers</li>
+<li>{{cliports|length}} clients searching for
+<a href="{% url 'searches' %}?expr=host:{{host}}">{{pvs|length}} PVs</a></li>
+</ul>
+
+
+<table><thead>
+<tr><th>Servers</th></tr>
+</thead><tbody>
+{% for ent in servports %}
+<tr><td>{{ host }}:{{ent}}</td></tr>
+{% empty %}
+<tr><td align="center"><b>None</b></td></tr>
+{% endfor %}
+</tbody></table>
+
+<table><thead>
+<tr><th>Clients</th></tr>
+</thead><tbody>
+{% for ent in cliports %}
+<tr><td>{{ host }}:{{ent}}</td></tr>
+{% empty %}
+<tr><td align="center"><b>None</b></td></tr>
+{% endfor %}
+</tbody></table>
+
+{% endblock %}

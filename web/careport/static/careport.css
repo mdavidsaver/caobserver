@@ -1,0 +1,47 @@
+body {
+  margin: 0px;
+  font-size: 100%;
+}
+#header {
+  background-color:#66ffff;
+  padding:5px;
+}
+#header div.heading {
+  font-size: 130%;
+}
+#nav {
+  background-color:#66ffff;
+  float:left;
+  min-width:50px;
+  max-width:20em;
+  min-height:100px;
+  padding:5px;
+  border-bottom-right-radius: 10px;
+}
+#nav img.logo {
+    padding-left: 1ex;
+}
+#main {
+  float:left;
+  margin: 5px;
+  min-width:200px;
+  min-height:200px;
+}
+table.catable {
+  font-size: 90%;
+  border-collapse: collapse;
+}
+table.catable td {
+  border-right: solid;
+  border-width: 0 1px;
+  padding: 0 1ex 0 1ex;
+}
+table.catable td:last-child {
+  border-right: 0;
+}
+table.catable tr.even {
+  background-color: #88ffff;
+}
+span.paginator .hidden {
+  visibility: hidden;
+}

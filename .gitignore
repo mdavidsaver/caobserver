@@ -1,0 +1,9 @@
+*~
+*.pyc
+*.pyo
+*project
+dropin.cache
+twistd.*
+*.sqlite*
+secret.txt
+web/topstatic

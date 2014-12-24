@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% load tz %}
+{% load math %}
+
+{% block title %} - Search Log{% endblock %}
+{% block banner %} - Search Log{% endblock %}
+{% block extrabanner %}
+<form style="width: 40em;" action="" method="get">
+    {{ form }}
+    <input type="submit" value="Search" />
+</form>
+{% endblock %}
+
+{% block extracss %}
+#id_expr {
+    width: 30em;
+}
+{% endblock %}
+
+{% block extrahead %}
+<noscript><meta http-equiv="refresh" content="30"></noscript>
+<script>
+(function($) {
+    ($(document).ready(function (){
+        $("#maintable")
+        .xLiveTable({mangle:mangleCAData({addrkey:"source"})})
+        ;
+    }))
+}(jQuery));
+</script>
+{% endblock %}
+
+{% block main %}
+{% include "paginator.html" %}
+<table id="maintable" class="catable"><thead>
+<tr><th atag="source">Client</th><th atag="pv">PV</th>
+<th atag="age">Age</th><th atag="seenFirst">First Seen</th></tr>
+</thead><tbody>
+{% for search in object_list %}
+<tr class="{% cycle 'even' 'odd' %}">
+<td>{{ search.source.host }}:{{ search.source.port }}</td>
+<td>{{search.pv}}</td>
+<td>{{ search.seenLast|sub:now }}</td>
+<td>{{ search.seenFirst|localtime|date:'r' }}</td></tr>
+{% empty %}
+<tr><td align="center" colspan="4"><b>No Searches</b></td></tr>
+{% endfor %}
+</tbody></table>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block main %}
+<p>Channel Access Protocol Activity monitoring</p>
+<ul>
+<li>{{ num_servers }} Active servers on {{num_hosts}} hosts
+<ul>
+{% for ent in server_versions %}
+<li>CA V4.{{ent.id}} - {{ent.value}}</li>
+{% endfor %}
+<li>Most recent beacon age {{last_beacon|default:'No beacons'}}</li></ul>
+</li>
+<li>{{ num_searches }} recent PV searches
+{% if client_versions %}<ul>
+{% for ent in client_versions %}
+<li>CA V4.{{ent.id}} - {{ent.value}}</li>
+{% endfor %}
+</ul>{% endif %}
+</li>
+</ul>
+{% endblock %}

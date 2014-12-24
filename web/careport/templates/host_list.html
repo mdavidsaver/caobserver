@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %} - Host List{% endblock %}
+{% block banner %} - Host List{% endblock %}
+
+{% block extrahead %}
+<meta http-equiv="refresh" content="30">
+{% endblock %}
+
+{% block main %}
+<p>{{object_list|length}} Hosts</p>
+<table><thead>
+<tr><th>Host Name</th></tr>
+</thead><tbody>
+{% for host in object_list %}
+<tr><td><a href="{% url 'host_detail' host %}">{{ host }}</a></td></tr>
+{% empty %}
+<tr><td align="center"><b>No Hosts</b></td></tr>
+{% endfor %}
+</tbody></table>
+{% endblock %}

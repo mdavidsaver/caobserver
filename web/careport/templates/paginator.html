@@ -1,0 +1,17 @@
+{% spaceless %}
+<span class="paginator">
+
+{% if page_obj.has_previous %}
+<a class="prevpage" href="{{basequery}}page={{page_obj.previous_page_number}}">&lt;&lt;&lt;</a>
+{% else %}
+<a class="prevpage hidden" href="">&lt;&lt;&lt;</a>
+{% endif %}
+<span class="pagenum">{{page_obj.number}}/{{paginator.num_pages}}</span>
+{% if page_obj.has_next %}
+<a class="nextpage" href="{{basequery}}page={{page_obj.next_page_number}}">&gt;&gt;&gt;</a>
+{% else %}
+<a class="nextpage hidden" href="">&gt;&gt;&gt;</a>
+{% endif %}
+
+</span>
+{% endspaceless %}
