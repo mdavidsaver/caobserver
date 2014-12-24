@@ -25,6 +25,7 @@
     ($(document).ready(function (){
         $("#maintable")
         .xLiveTable({mangle:mangleCAData({addrkey:"source"})})
+        .xPaginator($(".paginator"))
         ;
     }))
 }(jQuery));

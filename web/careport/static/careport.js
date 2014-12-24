@@ -209,6 +209,41 @@
     }
 }(jQuery));
 
+(function($) {
+    $.fn.xPaginator = function(sel, opts) {
+        var self=this;
+        var page;
+        var total;
+
+        if(sel.length==0 || this.length==0)
+            console.log("Warning: Paginating nothing");
+
+        this.on("newpage", function(junk, info) {
+            sel.find("span.pagenum").text(info.page+"/"+info.total);
+            page = info.page;
+            total= info.total;
+            sel.find(".prevpage").toggleClass("hidden", page<=1);
+            sel.find(".nextpage").toggleClass("hidden", page>=total);
+        });
+        
+        sel.find("a.prevpage").click(function(evt) {
+            if(page>1) {
+                self.triggerHandler("xPrevPage");
+                console.log("prevpage");
+            }
+            evt.preventDefault();
+        });
+        
+        sel.find("a.nextpage").click(function(evt) {
+            if(page<total) {
+                self.triggerHandler("xNextPage");
+                console.log("nextpage");
+            }
+            evt.preventDefault();
+        });
+    }
+}(jQuery));
+
 function mangleCAData(opts) {
     var addrkey = opts.addrkey || "source";
 
