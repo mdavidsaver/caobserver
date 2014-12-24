@@ -96,20 +96,6 @@ beacons = generic.MongoFindListView.as_view(
 )
 beacons = last_modified(coll_lastmod('servers','seenLast'))(beacons)
 
-searchlog = generic.MongoFindListView.as_view(
-    collection_name='events',
-    template_name='searchevent_list.html',
-    def_search_key = 'pv',
-    search_keys = {'host':'source.host','port':'source.port','pv':'pv'},
-    def_sort = [('$natural',-1)],
-    base_query = {'type':'search'},
-    extra_context = [
-        lambda V:V.context.update({'form':forms.SearchFilter(V.request.GET)}),
-        lambda V:V.context.update({'now':datetime.utcnow().replace(tzinfo=_utc)}),
-    ]
-)
-searchlog = last_modified(coll_lastmod('events','$natural','time'))(searchlog)
-
 searches = generic.MongoFindListView.as_view(
     collection_name='searches',
     template_name='search_list.html',

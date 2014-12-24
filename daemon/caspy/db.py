@@ -31,12 +31,13 @@ class SpyStore(object):
                        tz_aware=True)
         db = C[conf.get('db.name','caspy')]
 
-        # must be longer than EPICS_CA_BEACON_PERIOD and EPICS_CAS_BEACON_PERIOD
+        # Must be longer than EPICS_CA_BEACON_PERIOD and EPICS_CAS_BEACON_PERIOD
         #  default is 15 seconds
         self.exp_beacon = float(caconf.get('beacon.expire', '60'))
-        # must be longer than EPICS_CA_MAX_SEARCH_PERIOD
-        #  default is 300 seconds
-        self.exp_search = float(caconf.get('search.expire', '300'))
+        # should be longer than EPICS_CA_MAX_SEARCH_PERIOD
+        #   (which defaults to 300 seconds)
+        # We pick 6x longer (30 min.)
+        self.exp_search = float(caconf.get('search.expire', '1800'))
 
         self.num_beacons, self.num_searches = 0, 0
         self._start_time = datetime.utcnow().replace(tzinfo=_utc)
@@ -219,48 +220,7 @@ class SpyStore(object):
         now = datetime.utcnow().replace(tzinfo=_utc)
         expire = timedelta(seconds=self.exp_search)
 
-        # catch all
-        # nothing for several search periods
-        self._clients.update({"seenLast":{'$lt':now-expire*4}},
-                             {"$set":{"dead":True, 'result':'Gave up'}},
-                             multi=True)
-
-        # one search within two periods, assume success?
-        self._clients.update({
-            "seenLast":{'$lt':now-expire*2},
-            "hist":{'$size':1},
-        },
-        {
-            "$set":{"dead":True, 'result':'Single'}
-        }, multi=True)
-
-        # two or more searches and interval between the last two is larger
-        # then 3x the interval between the last one and now.
-        self._clients.update({
-            "hist":{'$not':{'$size':1}},
-            "seenLast":{'$lt':now-timedelta(seconds=5)},
-            "$where":Code('''function(){
-                var L=this.hist.length;
-                return (now-this.hist[L-1].time)/(this.hist[L-1].time-this.hist[L-2].time)>3;
-            }''', now=now),
-        },{
-                "$set":{"dead":True, 'result':'Success'}
-        }, multi=True)
-
-        # remove all parted
-        i=0
-        for E in self._clients.find({"dead":True}):
-            E = {
-                'type':'search', 'desc':E['result'], 'time':now,
-                'pv':E['pv'], 'source':E['source'],
-            }
-            self._events.insert(E)
-            i+=1
-
-        self._clients.remove({"dead":True})
-
-        if i>0:
-            _log.debug('Clean %d searches', i)
+        self._clients.remove({"seenLast":{'$lt':now-expire}})
 
     def _resolve_names(self):
         self._need_resolve = False
