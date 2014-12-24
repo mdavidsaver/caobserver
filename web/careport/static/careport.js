@@ -175,19 +175,6 @@
                 $(this.elem).triggerHandler("newpage", {page:data.page, total:data.total});
             this.page = data.page;
             this.total = data.total;
-        },
-        
-        setpage: function(opts) {
-            var np;
-            if('rel' in opts)
-                np = this.nextpage + opts.rel;
-            else if('abs' in opts)
-                np = this.nextpage + opts.rel;
-            else
-                return;
-            this.stop();
-            this.nextpage = np
-            this.updatenow();
         }
     }
     
@@ -197,8 +184,6 @@
         var self = new LiveTable(this, opts || {});
 
         this.on("xUpdate", self.updatenow.bind(self));
-        this.on("xNextPage", self.setpage.bind(self, {"rel":1}));
-        this.on("xPrevPage", self.setpage.bind(self, {"rel":-1}));
 
         $(document).on("xShown", self.updatenow.bind(self));
         $(document).on("xHidden", self.stop.bind(self));
@@ -224,22 +209,6 @@
             total= info.total;
             sel.find(".prevpage").toggleClass("hidden", page<=1);
             sel.find(".nextpage").toggleClass("hidden", page>=total);
-        });
-        
-        sel.find("a.prevpage").click(function(evt) {
-            if(page>1) {
-                self.triggerHandler("xPrevPage");
-                console.log("prevpage");
-            }
-            evt.preventDefault();
-        });
-        
-        sel.find("a.nextpage").click(function(evt) {
-            if(page<total) {
-                self.triggerHandler("xNextPage");
-                console.log("nextpage");
-            }
-            evt.preventDefault();
         });
     }
 }(jQuery));
