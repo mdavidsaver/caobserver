@@ -91,9 +91,6 @@
 (function($) {
     function LiveTable(elem, opts) {
         this.elem = elem.selector;
-        this.pagekey = opts.pagekey || "page";
-        this.nextpage = parseInt($.xgetQuery(this.pagekey,"1"), 10);
-        this.url = opts.url || "";
         this.period = opts.period || 10000;
         this.mangle = opts.mangle;
         this.total = 0;        
@@ -102,18 +99,16 @@
     LiveTable.prototype = {
         updatenow: function() {
             this.stop();
-            var self=this, args = {};
-            args[this.pagekey] = this.nextpage;
+            var self=this;
 
             this.request = $.ajax({
-                url: this.url,
+                url: "",
                 dataType:"json",
-                data:$.xbuildQuery(args),
+                data:location.search,
                 ifModified:true,
             })
             .done(this.havedata.bind(this))
             .fail(function(req, sts, err) {
-                self.nextpage = self.page || 1;
                 console.log("Request fails: "+sts+" "+err);
             })
             .always(function() {self.request = undefined;})
@@ -171,9 +166,8 @@
             tag.find("tr").xcycleClass(["even","odd"]);
             $(this.elem).find("tbody").replaceWith(tag);
 
-            if(this.page!=data.page || this.total!=data.total)
+            if(this.total!=data.total)
                 $(this.elem).triggerHandler("newpage", {page:data.page, total:data.total});
-            this.page = data.page;
             this.total = data.total;
         }
     }
@@ -203,6 +197,7 @@
         if(sel.length==0 || this.length==0)
             console.log("Warning: Paginating nothing");
 
+        // update the total pages and show/hide prev/nextpage links
         this.on("newpage", function(junk, info) {
             sel.find("span.pagenum").text(info.page+"/"+info.total);
             page = info.page;
