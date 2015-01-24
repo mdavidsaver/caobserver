@@ -44,7 +44,6 @@ This will populate _/var/observ/web/topstatic_.
 
 Apache vhost configuration based on default Apache on Debian.
 
-    WSGIPythonPath /var/observ/web
     <VirtualHost *:80>
         ServerName router.local
         ServerAlias router
@@ -61,13 +60,17 @@ Apache vhost configuration based on default Apache on Debian.
             allow from all
         </Directory>
 
-        WSGIScriptAlias / /var/observ/web/caobserver/wsgi.py
+        WSGIDaemonProcess app1
+        WSGIScriptAlias /ca /var/observ/web/caobserver/wsgi.py
 
         <Directory /var/observ/web/caobserver>
             Order allow,deny
             allow from all
         </Directory>
-    
+        <Location /ca>
+            WSGIProcessGroup app1
+        </Location>
+
         ErrorLog ${APACHE_LOG_DIR}/error.log
         LogLevel warn
         CustomLog ${APACHE_LOG_DIR}/access.log combined
