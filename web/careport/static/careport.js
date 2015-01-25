@@ -102,9 +102,9 @@
             var self=this;
 
             this.request = $.ajax({
-                url: "",
+                url: location.search,
                 dataType:"json",
-                data:location.search,
+                processData: false,
                 ifModified:true,
             })
             .done(this.havedata.bind(this))
