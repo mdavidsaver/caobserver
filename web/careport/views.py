@@ -27,15 +27,6 @@ from bson.tz_util import utc as _utc
 from . import forms, generic
 
 # HTTP conditional decorator based on collection last modification time
-def coll_lastmod(coll, sk, tk=None):
-    tk = tk or sk
-    def cond(req, *args, **kws):
-        C = req.mongodb[coll]
-        O = C.find_one({}, {tk:1}, sort=[(sk,-1)])
-        if O is not None:
-            return O[tk]
-    return cond
-
 cavermap = Code("function(){emit(this.ver,1);}")
 caverred = Code("function(K,V){return Array.sum(V);}")
 
@@ -69,45 +60,34 @@ def home(req):
     }
     return TemplateResponse(req, 'home.html', C)
 
-beaconlog = generic.MongoFindListView.as_view(
+beaconlog = generic.MongoFind.as_view(
     collection_name='events',
     template_name='beaconevent_list.html',
     def_search_key = 'source.host',
     search_keys = {'host':'source.host','port':'source.port'},
     def_sort = [('$natural',-1)],     
     base_query = {'type':'beacon'},
-    extra_context = [
-        lambda V:V.context.update({'form':forms.SearchFilter(V.request.GET)}),
-        lambda V:V.context.update({'now':datetime.utcnow().replace(tzinfo=_utc)}),
-    ]
+    time_sk = '$natural',
+    time_vk = 'time',
 )
-beaconlog = never_cache(last_modified(coll_lastmod('events','$natural','time'))(beaconlog))
 
-beacons = generic.MongoFindListView.as_view(
+beacons = generic.MongoFind.as_view(
     collection_name='servers',
     template_name='beacon_list.html',
     def_search_key = 'source.host',
     search_keys = {'host':'source.host','port':'source.port'},
     def_sort = [('seenLast',-1)],                
-    extra_context = [
-        lambda V:V.context.update({'form':forms.SearchFilter(V.request.GET)}),
-        lambda V:V.context.update({'now':datetime.utcnow().replace(tzinfo=_utc)}),
-    ]
+    time_sk = 'seenLast',
 )
-beacons = never_cache(last_modified(coll_lastmod('servers','seenLast'))(beacons))
 
-searches = generic.MongoFindListView.as_view(
+searches = generic.MongoFind.as_view(
     collection_name='searches',
     template_name='search_list.html',
     def_search_key = 'pv',
     search_keys = {'host':'source.host','port':'source.port','pv':'pv'},
     def_sort = [('seenLast',-1)],                
-    extra_context = [
-        lambda V:V.context.update({'form':forms.SearchFilter(V.request.GET)}),
-        lambda V:V.context.update({'now':datetime.utcnow().replace(tzinfo=_utc)}),
-    ]
+    time_sk = 'seenLast',
 )
-searches = never_cache(last_modified(coll_lastmod('searches','seenLast'))(searches))
 
 @cache_page(5)
 def servers(req):
