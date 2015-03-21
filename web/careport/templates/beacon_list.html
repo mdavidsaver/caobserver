@@ -24,16 +24,14 @@
 <script>
 (function($) {
     ($(document).ready(function (){
-        $("#maintable")
-        .xLiveTable({mangle:mangleCAData({addrkey:"source"})})
-        .xPaginator($(".paginator"))
-        ;
+        $("#content").xReload();
     }))
 }(jQuery));
 </script>
 {% endblock %}
 
 {% block main %}
+<div id="content">
 {% include "paginator.html" %}
 <table id="maintable" class="catable"><thead>
 <tr><th atag="source">Server</th><th atag="seq">Beacon</th><th atag="ver">Version</th>
@@ -50,4 +48,5 @@
 {% endfor %}
 </tbody></table>
 {% include "paginator.html" %}
+</div>
 {% endblock %}
