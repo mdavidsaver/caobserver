@@ -18,7 +18,7 @@ from django.template.response import TemplateResponse
 from django.core.cache import cache
 
 from django.views.decorators.http import last_modified
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page, never_cache
 
 from datetime import datetime
 from bson import Code
@@ -81,7 +81,7 @@ beaconlog = generic.MongoFindListView.as_view(
         lambda V:V.context.update({'now':datetime.utcnow().replace(tzinfo=_utc)}),
     ]
 )
-beaconlog = last_modified(coll_lastmod('events','$natural','time'))(beaconlog)
+beaconlog = never_cache(last_modified(coll_lastmod('events','$natural','time'))(beaconlog))
 
 beacons = generic.MongoFindListView.as_view(
     collection_name='servers',
@@ -94,7 +94,7 @@ beacons = generic.MongoFindListView.as_view(
         lambda V:V.context.update({'now':datetime.utcnow().replace(tzinfo=_utc)}),
     ]
 )
-beacons = last_modified(coll_lastmod('servers','seenLast'))(beacons)
+beacons = never_cache(last_modified(coll_lastmod('servers','seenLast'))(beacons))
 
 searches = generic.MongoFindListView.as_view(
     collection_name='searches',
@@ -107,7 +107,7 @@ searches = generic.MongoFindListView.as_view(
         lambda V:V.context.update({'now':datetime.utcnow().replace(tzinfo=_utc)}),
     ]
 )
-searches = last_modified(coll_lastmod('searches','seenLast'))(searches)
+searches = never_cache(last_modified(coll_lastmod('searches','seenLast'))(searches))
 
 @cache_page(5)
 def servers(req):
