@@ -76,8 +76,9 @@
             }
         },
  
-        havedata: function(data) {
-            if(data==undefined)
+        havedata: function(data, sts, jhdr) {
+            console.log("Status "+sts+" "+jhdr.status);
+            if(data==undefined || jhdr.status==304)
                 return;
             var newelem = $(this.elem.selector, data);
             if(newelem.length==0) {
@@ -96,7 +97,7 @@
         $(document).on("xHidden", self.stop.bind(self));
 
         this.data("xReload", self);
-        self.updatenow();
+        self.starttimer();
         return this;
     }
 }(jQuery));
