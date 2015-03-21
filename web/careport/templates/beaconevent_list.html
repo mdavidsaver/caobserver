@@ -38,7 +38,8 @@
 </thead><tbody>
 {% for event in object_list %}
 <tr class="{% cycle 'even' 'odd' %}">
-<td>{{ event.source.host }}:{{ event.source.port }}</td>
+<td><a href="{% url "beacon_detail" event.source.host event.source.port %}">
+{{ event.source.host }}:{{ event.source.port }}</a></td>
 <td>{{ event.desc|default:'unknown' }}</td>
 {% if not event.prev %}
 <td>X -&gt; {{ event.next.seq }}</td>

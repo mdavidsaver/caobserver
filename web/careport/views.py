@@ -89,6 +89,25 @@ searches = generic.MongoFind.as_view(
     time_sk = 'seenLast',
 )
 
+searchid = generic.MongoSingle.as_view(
+    collection_name='searches',
+    template_name='search_detail.html',
+)
+
+# server lookup by _id
+beaconid = generic.MongoSingle.as_view(
+    collection_name='servers',
+    template_name='beacon_detail.html',
+)
+
+# server lookup by host:port
+beaconsrv = generic.MongoSingle.as_view(
+    collection_name='servers',
+    template_name='beacon_detail.html',
+    id_args = [('source.host',None,'host'),
+               ('source.port',int,'port')],
+)
+
 @cache_page(5)
 def servers(req):
     C = {'object_list':req.mongodb.servers.distinct('source.host'),

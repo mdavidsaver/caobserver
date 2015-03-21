@@ -15,6 +15,7 @@ from datetime import datetime
 from collections import defaultdict
 
 from django.core.paginator import Paginator
+from django.shortcuts import Http404
 from django.views.generic import base
 
 from django.views.decorators.http import last_modified
@@ -29,16 +30,25 @@ class MongoSingleMixin(base.ContextMixin):
     """Extract a single document into the template context
     """
     collection_name = None # required
-    id_arg = 'id'
-    id_field = '_id'
+    id_args = [('_id', ObjectId, 'id')]
     result_fields = None
+    def get_id(self, **kws):
+        Q = {}
+        for F,C,V in self.id_args:
+            V = kws[V]
+            if C:
+                V = C(V)
+            Q[F] = V
+        return Q
+
     def get_context_data(self, **kws):
         context = super(MongoSingleMixin, self).get_context_data(**kws)
 
         coll = self.request.mongodb[self.collection_name]
-        oid = ObjectId(kws[self.id_arg])
-        context['object'] = coll.find_one({self.id_field:oid},
-                                          self.result_fields)
+        Q = self.get_id(**kws)
+        O = context['object'] = coll.find_one(Q, self.result_fields)
+        if O is None:
+            raise Http404("No such entry")
         return context
 
 def get_sort(sort, sort_keys, def_sort=None):

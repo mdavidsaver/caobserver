@@ -39,7 +39,7 @@
 </thead><tbody>
 {% for search in object_list %}
 <tr class="{% cycle 'even' 'odd' %}">
-<td>{{ search.source.host }}:{{ search.source.port }}</td>
+<td><a href="{% url "search_detail" search.id %}">{{ search.source.host }}:{{ search.source.port }}</a></td>
 <td>{{search.pv}}</td>
 <td>{{ search.seenLast|sub:now }}</td>
 <td>{{ search.seenFirst|localtime|date:'r' }}</td></tr>

@@ -18,6 +18,8 @@ urlpatterns = patterns('careport.views',
     url(r'^clients/$', 'clients', name='clients'),
     url(r'^beaconlog/$', 'beaconlog', name='beaconlog'),
     url(r'^beacons/$', 'beacons', name='beacons'),
+    url(r'^beacon/(?P<host>[^/]+)/(?P<port>[0-9]+)/$', 'beaconsrv', name='beacon_detail'),
     url(r'^searches/$', 'searches', name='searches'),
+    url(r'^search/(?P<id>[^/]+)/$', 'searchid', name='search_detail'),
     url(r'^host/([^/]+)/$', 'host_detail', name='host_detail'),
 )

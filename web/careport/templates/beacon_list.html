@@ -39,7 +39,8 @@
 </thead><tbody>
 {% for server in object_list %}
 <tr class="{% cycle 'even' 'odd' %}">
-<td>{{ server.source.host }}:{{ server.source.port }}</td>
+<td><a href="{% url "beacon_detail" server.source.host server.source.port %}">
+{{ server.source.host }}:{{ server.source.port }}</a></td>
 <td>{{server.seq}}</td><td>{{server.ver}}</td>
 <td>{{ server.seenLast|sub:now }}</td>
 <td>{{ server.seenFirst|localtime|date:'r' }}</td></tr>
