@@ -1,6 +1,6 @@
 """CA Observer
 
-Copyright (C) 2014 Michael Davidsaver
+Copyright (C) 2015 Michael Davidsaver
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -134,7 +134,7 @@ class SpyStore(object):
                 '$setOnInsert': {'seenFirst':B.time, 'source.host':host},
                 '$push':{'hist':{
                     '$each':[{'seq':B.seq, 'time':B.time}],
-                    '$slice':-20,
+                    '$slice':-240,
                 }},
             }
             prev = self._servers.find_and_modify(Q, U, upsert=True)
