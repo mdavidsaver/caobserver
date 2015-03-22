@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load math %}
+
 {% block title %} - Host {{host}}{% endblock %}
 {% block banner %} - Host {{host}}{% endblock %}
 
@@ -16,10 +18,16 @@
 
 
 <table><thead>
-<tr><th>Servers</th></tr>
+<tr><th>Servers</th><th>Uptime</th></tr>
 </thead><tbody>
 {% for ent in servports %}
-<tr><td>{{ host }}:{{ent}}</td></tr>
+<tr><td><a href="{% url "beacon_detail" host ent.source.port %}">{{ host }}:{{ent.source.port}}</a></td>
+{% if ent.seenFirst and ent.seenLast %}
+<td>{{ent.seenFirst|sub:ent.seenLast}}</td>
+{% else %}
+<td>?</td>
+{% endif %}
+</tr>
 {% empty %}
 <tr><td align="center"><b>None</b></td></tr>
 {% endfor %}

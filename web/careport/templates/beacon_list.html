@@ -34,15 +34,15 @@
 <div id="content">
 {% include "paginator.html" %}
 <table id="maintable" class="catable"><thead>
-<tr><th atag="source">Server</th><th atag="seq">Beacon</th><th atag="ver">Version</th>
-<th atag="age">Age</th><th atag="seenFirst">First Seen</th></tr>
+<tr><th>Server</th><th>Beacon</th><th>Version</th>
+<th>Uptime</th><th>First Seen</th></tr>
 </thead><tbody>
 {% for server in object_list %}
 <tr class="{% cycle 'even' 'odd' %}">
 <td><a href="{% url "beacon_detail" server.source.host server.source.port %}">
 {{ server.source.host }}:{{ server.source.port }}</a></td>
 <td>{{server.seq}}</td><td>{{server.ver}}</td>
-<td>{{ server.seenLast|sub:now }}</td>
+<td>{{ server.seenFirst|sub:server.seenLast }}</td>
 <td>{{ server.seenFirst|localtime|date:'r' }}</td></tr>
 {% empty %}
 <tr><td align="center" colspan="5"><b>No Servers</b></td></tr>

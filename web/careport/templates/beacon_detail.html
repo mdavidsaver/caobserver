@@ -10,7 +10,9 @@
 {% block main %}
 <table class="catable"><tbody>
 
-<tr><th>Server</th><td>{{object.source.host}}:{{object.source.port}}</td></tr>
+<tr><th>Server</th>
+<td><a href="{% url "host_detail" object.source.host %}">{{object.source.host}}</a>:{{object.source.port}}</td>
+</tr>
 <tr><th>CA Version</th><td>{{object.ver}}</td></tr>
 <tr><th>First seen</th><td>{{object.seenFirst|localtime|date:'r'}}</td></tr>
 <tr><th>Last seen</th><td>{{object.seenLast|localtime|date:'r'}}</td></tr>

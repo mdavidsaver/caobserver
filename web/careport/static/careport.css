@@ -45,3 +45,19 @@ table.catable tr.even {
 span.paginator .hidden {
   visibility: hidden;
 }
+
+table.catable a {
+  color: black;
+}
+table.catable a:link {
+  text-decoration: none;
+}
+table.catable a:visited {
+  text-decoration: none;
+}
+table.catable a:hover {
+  text-decoration: underline;
+}
+table.catable a:active {
+  text-decoration: underline;
+}

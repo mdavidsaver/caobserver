@@ -34,14 +34,14 @@
 <div id="content">
 {% include "paginator.html" %}
 <table id="maintable" class="catable"><thead>
-<tr><th atag="source">Client</th><th atag="pv">PV</th>
-<th atag="age">Age</th><th atag="seenFirst">First Seen</th></tr>
+<tr><th>Client</th><th>PV</th>
+<th>Age</th><th>First Seen</th></tr>
 </thead><tbody>
 {% for search in object_list %}
 <tr class="{% cycle 'even' 'odd' %}">
 <td><a href="{% url "search_detail" search.id %}">{{ search.source.host }}:{{ search.source.port }}</a></td>
-<td>{{search.pv}}</td>
-<td>{{ search.seenLast|sub:now }}</td>
+<td><a href="{% url 'searches' %}?expr=pv:{{search.pv}}">{{search.pv}}</a></td>
+<td>{{ search.seenFirst|sub:search.seenLast }}</td>
 <td>{{ search.seenFirst|localtime|date:'r' }}</td></tr>
 {% empty %}
 <tr><td align="center" colspan="4"><b>No Searches</b></td></tr>

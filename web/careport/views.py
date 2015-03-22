@@ -122,7 +122,7 @@ def clients(req):
 
 @cache_page(5)
 def host_detail(req, name):
-    A = req.mongodb.servers.find({'source.host':name}).distinct('source.port')
+    A = req.mongodb.servers.find({'source.host':name})
     B = req.mongodb.searches.find({'source.host':name}).distinct('source.port')
     C = req.mongodb.searches.find({'source.host':name}).distinct('pv')
 
