@@ -138,7 +138,7 @@ class MongoFindMixin(base.ContextMixin):
         except ValueError:
             page = 1
         page = context['page_obj'] = P.page(page)
-        L = list(page.object_list)
+        L = list(page.object_list) # I/O happens here
         for E in L:
             E['id'] = E.get('_id') # django doesn't like leading _
             

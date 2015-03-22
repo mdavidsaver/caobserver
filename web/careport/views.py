@@ -23,7 +23,7 @@ from datetime import datetime
 from bson import Code
 from bson.tz_util import utc as _utc
 
-from . import generic
+from . import generic, plot
 
 cavermap = Code("function(){emit(this.ver,1);}")
 caverred = Code("function(K,V){return Array.sum(V);}")
@@ -104,6 +104,31 @@ beaconsrv = generic.MongoSingle.as_view(
     template_name='beacon_detail.html',
     id_args = [('source.host',None,'host'),
                ('source.port',int,'port')],
+)
+
+import numpy
+def tdelta(V):
+    R = numpy.ndarray((V.shape[0]-1,2), dtype=V.dtype)
+    R[:,0] = V[:-1,0]
+    R[:,1] = V[1:,0] - V[:-1,0]
+    R[:,1] *= 86400.0 # scale to seconds
+    return R
+
+class PlotMongoSingle(generic.MongoSingleMixin, plot.PlotMixin):
+    pass
+
+beaconpng = PlotMongoSingle.as_view(
+    collection_name='servers',
+    id_args = [('source.host',None,'host'),
+               ('source.port',int,'port')],
+    context_key = ('object', 'hist'),
+    cols = [('time',plot.udate2num)],
+    transform = tdelta,
+    set_axis = {
+        'title':'Beacon Delta (sec)',
+        'autoscaley_on':False,
+        'ylim':(0, 30.0),
+    }
 )
 
 @cache_page(5)

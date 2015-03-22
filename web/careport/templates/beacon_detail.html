@@ -34,5 +34,6 @@
 <tr><td><b>None</b></td><td><b>None</b></td></tr>
 {% endfor %}
 </tbody></table>
-
+</div>
+<img style="float: right" alt="History Plot" src="{% url "beacon_png" object.source.host object.source.port %}"/>
 {% endblock %}
