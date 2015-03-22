@@ -127,7 +127,7 @@ beaconpng = PlotMongoSingle.as_view(
     set_axis = {
         'title':'Beacon Delta (sec)',
         'autoscaley_on':False,
-        'ylim':(0, 30.0),
+        'ylim':(0, 20.0),
     }
 )
 

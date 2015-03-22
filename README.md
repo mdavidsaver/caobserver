@@ -8,15 +8,19 @@ Required debian packages
 
 The caspy daemon requires:
 
+1. python >=2.7, <3.0
 1. python-twisted-core >=12.0
-1. python-twisted-web
+1. python-twisted-web >=12.0
 1. python-pymongo >=2.2
 1. mongodb-server >=2.4
 
 The caobserver web app. requires:
 
+1. python >=2.7, <3.0
 1. python-django >=1.7
-1. libjs-jquery >1.7
+1. matplotlib >= 1.1
+1. libjs-jquery >=1.7
+1. libjs-flot >=0.7
 1. python-pymongo >=2.2
 1. mongodb-server >=2.4
 

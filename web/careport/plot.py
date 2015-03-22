@@ -20,7 +20,7 @@ import numpy
 try:
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
     from matplotlib.figure import Figure
-    from matplotlib.dates import DateFormatter, date2num
+    from matplotlib.dates import DateFormatter, date2num, num2epoch
     udate2num = numpy.vectorize(date2num)
 except ImportError:
     Figure = None
@@ -60,6 +60,9 @@ class PlotMixin(base.ContextMixin, base.View):
 
         if json:
             # convert to list of lists
+            data[:,0] = num2epoch(data[:,0])
+            data[:,0] *= 1000 # to ms
+
             ret = [None]*data.shape[0]
             for i in range(data.shape[0]):
                 ret[i] = list(data[i,:])

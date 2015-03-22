@@ -104,4 +104,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'topstatic')
 
 STATICFILES_DIRS = (
     ('jquery', '/usr/share/javascript/jquery'),
+    ('flot', '/usr/share/javascript/flot'),
 )

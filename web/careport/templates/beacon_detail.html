@@ -7,7 +7,48 @@
 {% block title %} - Server Details{% endblock %}
 {% block banner %} - Server Details{% endblock %}
 
+{% block extracss %}
+div#plothold {
+    width: 4in;
+    height: 3in;
+}
+{% endblock %}
+
+{% block extrahead %}
+<script>
+(function($) {
+    ($(document).ready(function (){
+        if($.plot) {
+            var cont = $("<div></div>")
+            .attr("id","plothold")
+            .replaceAll("#plothold");
+
+            $.getJSON("plot", function(data){
+                // This works for the recent past...
+                var tzoff = new Date().getTimezoneOffset()*60000 // in ms
+                data["data"].forEach(function(row){
+                    row[0] -= tzoff; // UTC to browser local
+                });
+                data["label"] = "Beacon Delta (sec)";
+
+                $.plot("#plothold", [data], {
+                    xaxis: {mode: "time", timeformat:"%H:%M:%S"},
+                    yaxis: {min: 0, max:20},
+                });
+            })
+        } else {
+            $("<img></img>")
+            .attr("id","plothold")
+            .attr("src","plot")
+            .replaceAll("#plothold");
+        }
+    }))
+}(jQuery));
+</script>
+{% endblock %}
+
 {% block main %}
+
 <table class="catable"><tbody>
 
 <tr><th>Server</th>
@@ -23,6 +64,10 @@
 
 <h4>Recent History</h4>
 
+<noscript id="plothold">
+<img id="plotimg" alt="History Plot" src="plot"/>
+</noscript>
+
 <table class="catable"><thead>
 <tr><th>Beacon</th><th>Time</th></tr>
 </thead><tbody>
@@ -34,6 +79,5 @@
 <tr><td><b>None</b></td><td><b>None</b></td></tr>
 {% endfor %}
 </tbody></table>
-</div>
-<img style="float: right" alt="History Plot" src="{% url "beacon_png" object.source.host object.source.port %}"/>
+
 {% endblock %}
