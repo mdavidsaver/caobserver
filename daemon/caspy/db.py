@@ -22,6 +22,23 @@ from twisted.internet import threads
 
 from datetime import datetime, timedelta
 from bson.tz_util import utc as _utc
+from bson.code import Code
+
+mapdead=Code("""function() {
+  var delt=(this.seenLast-this.seenFirst)/1000; // sec
+  if(delt<60) return;
+  emit(this.pv, {count:1, sources:[{source:this.source, age:delt}]});
+}""")
+
+reducedead=Code("""function(key, values) {
+  var sources = [];
+  for(i=0; i<values.length; i++) {
+    sources.push(values[i].sources);
+  }
+  sources = Array.concat.apply(null, sources);
+  return {count:sources.length, sources:sources};
+}""")
+
 
 class SpyStore(object):
     def __init__(self, conf={}, caconf={}):
@@ -84,6 +101,11 @@ class SpyStore(object):
         coll.ensure_index([('pv',1)])
         coll.ensure_index([('seenLast',-1)])
 
+        # deadsearches: {'_id':'pvname',
+        #                'value':{'count':0, 'sources':[{'age':0, 'source':{...}}]}}
+        coll = db['deadsearches']
+        coll.ensure_index([('value.count',1)])
+
         self.conn, self.db = C, db
 
         self._dns, self._need_resolve = {}, False
@@ -116,6 +138,15 @@ class SpyStore(object):
         except:
             _log.exception('Error resolving names')
         self.update_stats()
+
+    def aggregate(self):
+        return threads.deferToThread(self._with_conn, self._aggregate)
+
+    def _aggregate(self):
+        try:
+            self._clients.map_reduce(mapdead, reducedead, 'deadsearches')
+        except:
+            _log.exception('Error re-gen deadsearches')
 
     def _handle_beacon(self, msgs):
         self.num_beacons += len(msgs)

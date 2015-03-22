@@ -120,6 +120,8 @@ class Maker(object):
 
         base.addService(internet.TimerService(30.0, store.periodic))
 
+        base.addService(internet.TimerService(5*60.0, store.aggregate))
+
         return base
 
 serviceMaker = Maker()
