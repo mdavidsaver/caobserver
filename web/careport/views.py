@@ -1,6 +1,6 @@
 """CA Observer
 
-Copyright (C) 2014 Michael Davidsaver
+Copyright (C) 2015 Michael Davidsaver
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
@@ -17,16 +17,14 @@ from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.core.cache import cache
 
-from django.views.decorators.http import last_modified
-from django.views.decorators.cache import cache_page, never_cache
+from django.views.decorators.cache import cache_page
 
 from datetime import datetime
 from bson import Code
 from bson.tz_util import utc as _utc
 
-from . import forms, generic
+from . import generic
 
-# HTTP conditional decorator based on collection last modification time
 cavermap = Code("function(){emit(this.ver,1);}")
 caverred = Code("function(K,V){return Array.sum(V);}")
 

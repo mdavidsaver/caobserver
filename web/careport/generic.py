@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """CA Observer
 
-Copyright (C) 2014 Michael Davidsaver
+Copyright (C) 2015 Michael Davidsaver
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by
