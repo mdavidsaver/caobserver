@@ -24,6 +24,7 @@ try:
     udate2num = numpy.vectorize(date2num)
 except ImportError:
     Figure = None
+    udate2num = None
 
 class PlotMixin(base.ContextMixin, base.View):
     context_key = None # required

@@ -32,7 +32,7 @@
     function ReloadTimer(elem, opts) {
         this.period = (opts.period || 15)*1000;
         this.url = opts.url || "";
-        this.elem = elem;
+        this.elem = elem.selector;
         if(!this.elem) {
             console.log("No element!");
         }
@@ -80,11 +80,11 @@
             console.log("Status "+sts+" "+jhdr.status);
             if(data==undefined || jhdr.status==304)
                 return;
-            var newelem = $(this.elem.selector, data);
+            var newelem = $(this.elem, data);
             if(newelem.length==0) {
                 console.log("Element not found??");
             }
-            this.elem.replaceWith(newelem);
+            $(this.elem).replaceWith(newelem);
         },
         
     }

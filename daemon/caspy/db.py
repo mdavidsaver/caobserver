@@ -35,7 +35,7 @@ reducedead=Code("""function(key, values) {
   for(i=0; i<values.length; i++) {
     sources.push(values[i].sources);
   }
-  sources = Array.concat.apply(null, sources);
+  sources = [].concat.apply([], sources);
   return {count:sources.length, sources:sources};
 }""")
 
